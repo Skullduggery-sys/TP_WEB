@@ -1,0 +1,25 @@
+<footer>
+    <nav class="navbar navbar-expand navbar-da bg-dark">
+        <span>
+        <ul class="pagination ml-5 pl-3">
+
+            {{ objects_count}}
+            <li class="page-item">
+                <a class="page-link" href="{% url 'home' 1 %}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">4</a></li>
+            <li class="page-item"><a class="page-link" href="#">5</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+            </span>
+    </nav>
+</footer>
