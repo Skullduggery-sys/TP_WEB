@@ -55,6 +55,30 @@ def paginate(objects, page, per_page=3):
         raise EmptyPageException("Page doesn't exist")
 
 
+def get_visible_pages(objects, page, per_page=3):
+    paginator = Paginator(objects, per_page)
+    paginator_len = 5
+    page_numbers = list()
+
+    first_page = page - 2 if page - 2 >= 1 else 1
+    for i in range(paginator_len):
+        try:
+            paginator.page(first_page + i)
+            page_numbers.append(first_page + i)
+        except EmptyPage:
+            break
+    return page_numbers
+
+
+def last_page(objects, page, per_page=3) -> bool:
+    paginator = Paginator(objects, per_page)
+    try:
+        paginator.page(page + 1)
+    except EmptyPage:
+        return True
+    return False
+
+
 def base(request):
     try:
         pageNumber = get_page_number(request)
@@ -64,7 +88,12 @@ def base(request):
     except EmptyPageException as e:
         return HttpResponseBadRequest(f"Empty page: {str(e)}")
 
-    return render(request, 'base.html', {'questions': questions, 'objects_count': len(questions)})
+    paginate_pages = get_visible_pages(QUESTIONS, pageNumber)
+
+    return render(request, 'base.html',
+                  {'questions': questions, 'visible_pages': paginate_pages, 'current_page': pageNumber,
+                   'last_page': last_page(QUESTIONS, pageNumber),
+                   'route': 'home'})
 
 
 def tmp(request):
@@ -95,5 +124,12 @@ def answers(request, question_id):
     except EmptyPageException as e:
         return HttpResponseBadRequest(f"Empty page: {str(e)}")
 
+    paginate_pages = get_visible_pages(QUESTIONS, pageNumber)
+
     return render(request, 'answers.html',
-                  {'answers': answer, 'question': QUESTIONS[question_id], 'answers_count': len(answer)})
+                  {'answers': answer, 'question': QUESTIONS[question_id], 'visible_pages': paginate_pages,
+                   'current_page': pageNumber,
+                   'last_page': last_page(QUESTIONS, pageNumber),
+                   'route': f"answers",
+                   'additional': ''})
+
