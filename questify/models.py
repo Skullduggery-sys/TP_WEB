@@ -11,6 +11,9 @@ class QuestionManager(models.Manager):
     def best_question(self):
         return self.annotate(total_likes=Sum('questionslikes__value')).filter(total_likes__gt=80)
 
+    def by_tag(self, tag):
+        return self.tags.filter(tags__name=tag)
+
 
 class Question(models.Model):
     author_ID = models.ForeignKey("Author", on_delete=models.PROTECT)
