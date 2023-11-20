@@ -5,7 +5,7 @@ from django.db.models import Sum
 
 
 class QuestionManager(models.Manager):
-    def new_question(self):
+    def new_questions(self):
         return self.order_by('-creation_date')
 
     def best_question(self):
@@ -15,12 +15,19 @@ class QuestionManager(models.Manager):
         return self.tags.filter(tags__name=tag)
 
 
+class AnswerManager(models.Manager):
+    def get_answers(self, question_id):
+        return self.filter(question_id=question_id)
+
+
 class Question(models.Model):
     author_ID = models.ForeignKey("Author", on_delete=models.PROTECT)
     text = models.TextField()
     title = models.CharField(max_length=255)
     tags = models.ManyToManyField("Tags")
     creation_date = models.DateTimeField(auto_now_add=True)
+
+    objects = QuestionManager()
 
 
 class Tags(models.Model):
@@ -54,6 +61,8 @@ class Answers(models.Model):
     question_ID = models.ForeignKey("Question", on_delete=models.CASCADE)
     text = models.TextField()
     is_correct = models.BooleanField(default=False)
+
+    objects = AnswerManager()
 
 
 class Author(models.Model):
