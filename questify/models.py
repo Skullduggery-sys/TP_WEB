@@ -16,7 +16,7 @@ class QuestionManager(models.Manager):
 
 class AnswerManager(models.Manager):
     def get_answers(self, question_id):
-        return self.filter(question_id=question_id)
+        return self.get(question_id=question_id)
 
 
 class Question(models.Model):
