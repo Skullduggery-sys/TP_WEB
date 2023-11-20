@@ -21,7 +21,6 @@ class Command(BaseCommand):
             random_tags = Tags.objects.order_by('?')[:3]
             question = Question.objects.create(text=faker.text(), title=faker.company(), author=random_author)
             question.tags.set(random_tags)
-            #TODO добавить тэги
 
         for i in range(ratio * 100):
 
